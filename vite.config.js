@@ -7,7 +7,7 @@ import vuetify from "vite-plugin-vuetify";
 
 export default () => {
   const baseURL =
-    process.env.APP_ENV === "development" ? "/" : "/travel-frontend/";
+    process.env.APP_ENV === "development" ? "/" : "/okc-couriers/";
 
   return defineConfig({
     plugins: [vue(), vuetify({ autoImport: true })],
