@@ -1,19 +1,122 @@
 <script setup>
 import ocLogo from "/oc_logo.png";
+import navbarImage from "/navbar.svg";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import UserServices from "../services/UserServices";
+import {getDomainUrl} from "../utils";
 
 const router = useRouter();
 
 const user = ref(null);
 const title = ref("OKC Couriers");
 const logoURL = ref("");
-
+const navbar = ref("");
+const drawerOpen = ref(false)
+const routes = {
+  1:[
+    {
+    path: getDomainUrl()+"/dashboard",
+    icon: "/dashboard.png",
+    name: "Dashboard"
+  },
+  {
+    path: getDomainUrl()+"/users/1",
+    icon: "/admin.png",
+    name: "Manage Admins"
+  },
+   {
+    path: getDomainUrl()+"/users/2",
+    icon: "/clerk.png",
+    name: "Manage Clerks"
+  },
+  {
+    path: getDomainUrl()+"/users/3",
+    icon: "/delivery_boy.png",
+    name: "Manage Delivery Boys"
+  },
+    {
+    path: getDomainUrl()+"/users/unverified",
+    icon: "/verify.png",
+    name: "Unverified Users"
+  },
+  {
+    path: getDomainUrl()+"/orders",
+    icon: "/order.png",
+    name: "Manage Orders"
+  },
+  {
+    path: getDomainUrl()+"/customers",
+    icon: "/customer.png",
+    name: "Manage Customers"
+  },
+  {
+    path: getDomainUrl()+"/payments",
+    icon: "/payment.png",
+    name: "Manage Payments"
+  }
+  ],
+  2:[
+    {
+    path: getDomainUrl()+"/dashboard",
+    icon: "/dashboard.png",
+    name: "Dashboard"
+    },
+    {
+      path: getDomainUrl()+"/users/3",
+      icon: "/delivery_boy.png",
+      name: "Manage Delivery Boys"
+    },
+    {
+      path: getDomainUrl()+"/orders",
+      icon: "/order.png",
+      name: "Manage Orders"
+    },
+    {
+      path: getDomainUrl()+"/customers",
+      icon: "/customer.png",
+      name: "Manage Customers"
+    },
+    {
+      path: getDomainUrl()+"/mypayments",
+      icon: "/payment.png",
+      name: "My Payments"
+    },
+    {
+      path: getDomainUrl()+"/myorders",
+      icon: "/order.png",
+      name: "Orders placed by me"
+    }
+    ],
+  3: [
+    {
+    path: getDomainUrl()+"/dashboard",
+    icon: "/dashboard.png",
+    name: "Dashboard"
+    },
+    {
+    path: getDomainUrl()+"/my-current-order",
+    icon: "/order.png",
+    name: "Current Order"
+    },
+    {
+    path: getDomainUrl()+"/myorders",
+    icon: "/order.png",
+    name: "My Orders"
+    },
+    {
+    path: getDomainUrl()+"/mypayments",
+    icon: "/payment.png",
+    name: "My Payments"
+    }
+  ],
+}
 onMounted(() => {
   logoURL.value = ocLogo;
+  navbar.value = navbarImage;
   user.value = JSON.parse(localStorage.getItem("user"));
 });
+
 
 function logout() {
   UserServices.logoutUser()
@@ -31,16 +134,28 @@ function logout() {
 
 <template>
   <div>
-    <v-app-bar color='#555' app dark>
-      <router-link :to="{ name: 'home' }">
+    <v-navigation-drawer v-model="drawerOpen" app>
+      <!-- Your navigation menu content here -->
+      <v-list style="margin-top:20px;">
+        <v-list-item v-for="route in routes[user?.role_id]" :key="route.path" :to="route.path" link>
+          <div style="display:flex">
+            <!-- <v-icon>{{ route.icon }}</v-icon> -->
+            <img :src="route.icon" width="25" height="25" style="margin-right:20px;"/>
+            <p style="color:black;">{{ route.name }}</p>
+          </div>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-app-bar color='#1877f2' app dark>
+      <v-app-bar-nav-icon color="secondary"  @click.stop="drawerOpen = !drawerOpen" v-if="user?.id">
         <v-img
           class="mx-2"
-          :src="logoURL"
-          height="50"
-          width="50"
+          :src="navbar"
+          height="30"
+          width="30"
           contain
-        ></v-img>
-      </router-link>
+        ></v-img> 
+      </v-app-bar-nav-icon>
       <v-toolbar-title class="title" :style="{color:'white',cursor:'pointer'}" >
         <a href="/">{{ title }}</a>
       </v-toolbar-title>
