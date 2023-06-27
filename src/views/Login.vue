@@ -31,7 +31,9 @@ onMounted(async () => {
 });
 
 const getRoleId = () => {
-  return role === "Admin" ? 1 : role === "Clerk" ? 2 : 3
+  if(role.value === "Admin") return 1
+  if(role.value === "Clerk") return 2
+  return 3
 }
 
 async function createAccount() {
