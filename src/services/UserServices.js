@@ -1,11 +1,16 @@
 import apiClient from "./services";
 
 export default {
-  getUser() {
-    return apiClient.get("users");
+  getUser(id) {
+    if(!id)
+      return apiClient.get("users");
+    return apiClient.get("users/"+id)
   },
   addUser(user) {
     return apiClient.post("users", user);
+  },
+  updateUser(user) {
+    return apiClient.put("users/" + user.id, user);
   },
   loginUser(user) {
     console.log(user);
@@ -23,4 +28,35 @@ export default {
   logoutUser() {
     return apiClient.post("logout");
   },
+  getAdmins(){
+    return apiClient.get("users/admins");
+  },
+  getClerks(){
+    return apiClient.get("users/clerks");
+  },
+  getDeliveryBoys(){
+    return apiClient.get("users/deliveryBoys");
+  },
+  getUnVerifiedUsers(){
+    return apiClient.get("users/unverified");
+  },
+  getUsers(id) {
+    if(!id)
+      return this.getUser()
+    else {
+      if(id==1){
+        return this.getAdmins()
+      } else if(id==2) {
+        return this.getClerks();
+      } else if(id=="unverified") {
+        return this.getUnVerifiedUsers();
+      }
+      else {
+        return this.getDeliveryBoys();
+      }
+    }
+  },
+  deleteUser(userId) {
+    return apiClient.delete("users/" + userId);
+  }
 };
