@@ -17,96 +17,96 @@ const routes = {
   1:[
     {
     path: getDomainUrl()+"/dashboard",
-    icon: "/dashboard.png",
+    icon: getDomainUrl()+"/dashboard.png",
     name: "Dashboard"
   },
   {
     path: getDomainUrl()+"/users/1",
-    icon: "/admin.png",
+    icon: getDomainUrl()+"/admin.png",
     name: "Manage Admins"
   },
    {
     path: getDomainUrl()+"/users/2",
-    icon: "/clerk.png",
+    icon: getDomainUrl()+"/clerk.png",
     name: "Manage Clerks"
   },
   {
     path: getDomainUrl()+"/users/3",
-    icon: "/delivery_boy.png",
+    icon: getDomainUrl()+"/delivery_boy.png",
     name: "Manage Delivery Boys"
   },
     {
     path: getDomainUrl()+"/users/unverified",
-    icon: "/verify.png",
+    icon: getDomainUrl()+"/verify.png",
     name: "Unverified Users"
   },
   {
     path: getDomainUrl()+"/orders",
-    icon: "/order.png",
+    icon: getDomainUrl()+"/order.png",
     name: "Manage Orders"
   },
   {
     path: getDomainUrl()+"/customers",
-    icon: "/customer.png",
+    icon: getDomainUrl()+"/customer.png",
     name: "Manage Customers"
   },
   {
     path: getDomainUrl()+"/payments",
-    icon: "/payment.png",
+    icon: getDomainUrl()+"/payment.png",
     name: "Manage Payments"
   }
   ],
   2:[
     {
     path: getDomainUrl()+"/dashboard",
-    icon: "/dashboard.png",
+    icon: getDomainUrl()+"/dashboard.png",
     name: "Dashboard"
     },
     {
       path: getDomainUrl()+"/users/3",
-      icon: "/delivery_boy.png",
+      icon: getDomainUrl()+"/delivery_boy.png",
       name: "Manage Delivery Boys"
     },
     {
       path: getDomainUrl()+"/orders",
-      icon: "/order.png",
+      icon: getDomainUrl()+"/order.png",
       name: "Manage Orders"
     },
     {
       path: getDomainUrl()+"/customers",
-      icon: "/customer.png",
+      icon: getDomainUrl()+"/customer.png",
       name: "Manage Customers"
     },
     {
       path: getDomainUrl()+"/mypayments",
-      icon: "/payment.png",
+      icon: getDomainUrl()+"/payment.png",
       name: "My Payments"
     },
     {
       path: getDomainUrl()+"/myorders",
-      icon: "/order.png",
+      icon: getDomainUrl()+"/order.png",
       name: "Orders placed by me"
     }
     ],
   3: [
     {
     path: getDomainUrl()+"/dashboard",
-    icon: "/dashboard.png",
+    icon: getDomainUrl()+"/dashboard.png",
     name: "Dashboard"
     },
     {
     path: getDomainUrl()+"/my-current-order",
-    icon: "/order.png",
+    icon: getDomainUrl()+"/order.png",
     name: "Current Order"
     },
     {
     path: getDomainUrl()+"/myorders",
-    icon: "/order.png",
+    icon: getDomainUrl()+"/order.png",
     name: "My Orders"
     },
     {
     path: getDomainUrl()+"/mypayments",
-    icon: "/payment.png",
+    icon: getDomainUrl()+"/payment.png",
     name: "My Payments"
     }
   ],
