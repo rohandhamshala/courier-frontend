@@ -37,9 +37,9 @@ export default {
   getDeliveryBoys(){
     return apiClient.get("users/deliveryBoys");
   },
-  getUnVerifiedUsers(){
-    return apiClient.get("users/unverified");
-  },
+  // getUnVerifiedUsers(){
+  //   return apiClient.get("users/unverified");
+  // },
   getUsers(id) {
     if(!id)
       return this.getUser()
@@ -48,9 +48,10 @@ export default {
         return this.getAdmins()
       } else if(id==2) {
         return this.getClerks();
-      } else if(id=="unverified") {
-        return this.getUnVerifiedUsers();
-      }
+      } 
+      // else if(id=="unverified") {
+      //   return this.getUnVerifiedUsers();
+      // }
       else {
         return this.getDeliveryBoys();
       }
