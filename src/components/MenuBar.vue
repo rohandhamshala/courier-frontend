@@ -35,11 +35,6 @@ const routes = {
     icon: getDomainUrl()+"/delivery_boy.png",
     name: "Manage Delivery Boys"
   },
-    {
-    path: getDomainUrl()+"/users/unverified",
-    icon: getDomainUrl()+"/verify.png",
-    name: "Unverified Users"
-  },
   {
     path: getDomainUrl()+"/orders",
     icon: getDomainUrl()+"/order.png",
