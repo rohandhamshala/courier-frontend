@@ -98,7 +98,7 @@ const deleteUser = async(id,index) => {
       <h3 v-else-if="type == 3">Delivery Boy list</h3>
       <h3 v-else-if="type=='unverified'">Unverified Users</h3>
       <h3 v-else>User list</h3>
-        <a class="btn btn-warning create" :href="[getDomainUrl() + '/create-user']" style="margin-left:auto;" >Create User</a>
+        <a class="btn btn-warning create" :href="[getDomainUrl() + 'create-user']" style="margin-left:auto;" >Create User</a>
     </div>
     <br/>
     <div style="display:flex;">
