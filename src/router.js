@@ -9,14 +9,44 @@ const router = createRouter({
       component: () => import("./views/DashBoard.vue"),
     },
     {
+      path: "/dashboard",
+      name: "dashboard",
+      component: () => import("./views/DashBoard.vue"),
+    },
+    {
       path: "/login",
       name: "login",
       component: () => import("./views/Login.vue"),
     },
     {
+      path: "/payments",
+      name: "payment",
+      component: () => import("./views/PaymentList.vue"),
+    },
+    {
+      path: "/mypayments",
+      name: "mypayment",
+      component: () => import("./views/MyPaymentList.vue"),
+    },
+    {
+      path: "/orders",
+      name: "orders",
+      component: () => import("./views/OrderList.vue"),
+    },
+    {
+      path: "/orders/:type",
+      name: "filterOrders",
+      component: () => import("./views/OrderList.vue"),
+    },
+    {
       path: "/users",
       name: "users",
       component: () => import("./views/UserList.vue"),
+    },
+    {
+      path: "/customers",
+      name: "customers",
+      component: () => import("./views/CustomerList.vue"),
     },
     {
       path: "/users/:type",
@@ -32,6 +62,36 @@ const router = createRouter({
       path: "/edit-user/:id",
       name: "editUser",
       component: () => import("./views/EditUser.vue"),
+    },
+    {
+      path: "/create-customer",
+      name: "createCustomer",
+      component: () => import("./views/CreateCustomer.vue"),
+    },
+    {
+      path: "/edit-customer/:id",
+      name: "editCustomer",
+      component: () => import("./views/EditCustomer.vue"),
+    },
+    {
+      path: "/create-payment",
+      name: "createPayment",
+      component: () => import("./views/CreatePayment.vue"),
+    },
+    {
+      path: "/edit-payment/:id",
+      name: "editPayment",
+      component: () => import("./views/EditPayment.vue"),
+    },
+    {
+      path: "/create-order",
+      name: "createOrder",
+      component: () => import("./views/CreateOrder.vue"),
+    },
+    {
+      path: "/edit-order/:id",
+      name: "editOrder",
+      component: () => import("./views/EditOrder.vue"),
     },
   ],
 });

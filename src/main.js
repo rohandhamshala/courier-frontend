@@ -9,7 +9,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 const TITheme = {
   dark: false,
   colors: {
-    primary: "#0d6efd",
+    primary: "#1877f2",
     secondary: "#E1E1E1",
     accent: "#47121D",
     success: "#47121D",

@@ -25,4 +25,10 @@ import 'bootstrap/dist/js/bootstrap.js'
   body {
         font-family: 'Montserrat', sans-serif;
   }
+  .create,.edit,.delete {
+    background-color: #1877f2 ;
+    margin-left: 20px;
+    padding-top: -10px;
+    color: white;
+  }
 </style>

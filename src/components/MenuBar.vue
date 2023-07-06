@@ -1,18 +1,31 @@
 <script setup>
 import ocLogo from "/oc_logo.png";
 import navbarImage from "/navbar.svg";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import UserServices from "../services/UserServices";
 import {getDomainUrl} from "../utils";
 
 const router = useRouter();
-
+const snackbar = ref({
+  value: false,
+  color: "",
+  text: "",
+});
 const user = ref(null);
 const title = ref("OKC Couriers");
 const logoURL = ref("");
 const navbar = ref("");
 const drawerOpen = ref(false)
+const isAvailable = ref(false)
+onMounted(() => {
+  logoURL.value = ocLogo;
+  navbar.value = navbarImage;
+  user.value = JSON.parse(localStorage.getItem("user"));
+  if(user.value)
+    isAvailable.value = user.value.availabilty ? true : false
+});
+
 const routes = {
   1:[
     {
@@ -78,7 +91,7 @@ const routes = {
       name: "My Payments"
     },
     {
-      path: "/myorders",
+      path: "/orders/placedByMe",
       icon: getDomainUrl()+"/order.png",
       name: "Orders placed by me"
     }
@@ -95,23 +108,38 @@ const routes = {
     name: "Current Order"
     },
     {
-    path: "/myorders",
-    icon: getDomainUrl()+"/order.png",
-    name: "My Orders"
+      path: "/mypayments",
+      icon: getDomainUrl()+"/payment.png",
+      name: "My Payments"
     },
     {
-    path: "/mypayments",
-    icon: getDomainUrl()+"/payment.png",
-    name: "My Payments"
+      path: "/orders/deliveredByMe",
+      icon: getDomainUrl()+"/order.png",
+      name: "Orders delivered by me"
     }
   ],
 }
-onMounted(() => {
-  logoURL.value = ocLogo;
-  navbar.value = navbarImage;
-  user.value = JSON.parse(localStorage.getItem("user"));
-});
 
+ watch(
+      isAvailable,
+      async(newValue, oldValue) => { 
+          await UserServices.updateUser({ id: user.value.id, availabilty: newValue ? 1 : 0 })
+          .then((response) => {
+            user.value.availabilty = newValue ? 1 : 0
+            localStorage.setItem("user",JSON.stringify(user.value))
+        })
+        .catch((error) => {
+            console.log(error);
+            snackbar.value.value = true;
+            snackbar.value.color = "error";
+            snackbar.value.text = error.response.data.message;
+        });
+      }
+    );
+
+function closeSnackBar() {
+  snackbar.value.value = false;
+}
 
 function logout() {
   UserServices.logoutUser()
@@ -140,6 +168,11 @@ function logout() {
           </div>
         </v-list-item>
       </v-list>
+      <div class="form-check form-switch" style="margin-left:20px" v-if="user">
+        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" v-model="isAvailable" >
+        <label class="form-check-label" for="flexSwitchCheckChecked" v-if="isAvailable">You are currently Available!</label>
+        <label class="form-check-label" for="flexSwitchCheckChecked" v-else>You are offline!</label>
+      </div>
     </v-navigation-drawer>
     <v-app-bar color='#1877f2' app dark>
       <v-app-bar-nav-icon color="secondary"  @click.stop="drawerOpen = !drawerOpen" v-if="user?.id">
@@ -187,6 +220,20 @@ function logout() {
         </v-card>
       </v-menu>
     </v-app-bar>
+    
+      <v-snackbar v-model="snackbar.value" rounded="pill">
+        {{ snackbar.text }}
+
+        <template v-slot:actions>
+          <v-btn
+            :color="snackbar.color"
+            variant="text"
+            @click="closeSnackBar()"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
   </div>
 </template>
 

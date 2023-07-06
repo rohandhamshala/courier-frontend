@@ -1,8 +1,12 @@
 import apiClient from "./services";
 
 export default {
-  getOrders() {
-    return apiClient.get("orders");
+  getOrders(type,userId) {
+    if(!type)
+      return apiClient.get("orders");
+    if(type == "placedBy")
+      return apiClient.get("orders/placedBy/"+userId)
+    return apiClient.get("orders/deliveryBoy/"+userId) 
   },
   getOrder(id) {
     return apiClient.get("orders/" + id);

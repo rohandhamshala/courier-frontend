@@ -9,7 +9,7 @@ import { createVuetify } from "vuetify";
 const TITheme = {
   dark: false,
   colors: {
-    primary: "#555",
+    primary: "#1877f2",
     secondary: "#E1E1E1",
     accent: "#47121D",
     success: "#47121D",
