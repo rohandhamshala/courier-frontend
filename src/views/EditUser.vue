@@ -4,6 +4,9 @@ import { ref, toRaw } from "vue";
 import { useRouter } from "vue-router";
 import UserServices from "../services/UserServices.js";
 import Spinner from "../components/Spinner.vue";
+import Snackbar from "../components/Snackbar.vue";
+import { updateSnackbar } from "../utils"
+import InputField from "../components/InputField.vue"
 
 const router = useRouter();
 const snackbar = ref({
@@ -34,6 +37,10 @@ const roleOptions =  [
         }
       ]
 onMounted(async () => {
+   const isLoggedIn = JSON.parse(localStorage.getItem("user"));
+    if(!isLoggedIn) {
+    router.push({ name: "login" });
+  }
     await getUser();
     isSpinner.value = false
 });
@@ -49,57 +56,41 @@ async function getUser() {
             isSpinner.value = false
         });
 }
-function closeSnackBar() {
-  snackbar.value.value = false;
-}
 
 async function updateUser() {
-    if(user.value.firstName === "") {
-            snackbar.value.value = true;
-            snackbar.value.color = "error";
-            snackbar.value.text = "First name is empty!";
+      if(user.value.firstName === "") {
+        snackbar.value = updateSnackbar("First Name is Empty")
     }
     else if(user.value.lastName === "") {
-            snackbar.value.value = true;
-            snackbar.value.color = "error";
-            snackbar.value.text = "Last name is empty!";
+        snackbar.value = updateSnackbar("Last Name is Empty")
     }
     else if(user.value.email === "") {
-            snackbar.value.value = true;
-            snackbar.value.color = "error";
-            snackbar.value.text = "Email is empty!";
+           snackbar.value = updateSnackbar("Email is Empty")
     }
     else if(user.value.mobile === "") {
-            snackbar.value.value = true;
-            snackbar.value.color = "error";
-            snackbar.value.text = "Mobile is empty!";
+             snackbar.value = updateSnackbar("Mobile is Empty")
+    }
+    else if(user.value.password === "") {
+        snackbar.value = updateSnackbar("Password is Empty")
     }
     else if(user.value.apartment_number === "") {
-            snackbar.value.value = true;
-            snackbar.value.color = "error";
-            snackbar.value.text = "Apartment number is empty!";
+        snackbar.value = updateSnackbar("Apartment Number is Empty")
     }
     else if(user.value.role_id === "") {
-            snackbar.value.value = true;
-            snackbar.value.color = "error";
-            snackbar.value.text = "Role is empty!";
+        snackbar.value = updateSnackbar("Role is Empty")
     }
     else {
         isSpinner.value = true
         await UserServices.updateUser(user.value)
             .then((response) => {
-                snackbar.value.value = true;
-                snackbar.value.color = "green";
-                snackbar.value.text = "User is updated successfully!";
-                isSpinner.value = false
-            })
-            .catch((error) => {
-                console.log(error);
-                snackbar.value.value = true;
-                snackbar.value.color = "error";
-                snackbar.value.text = error.response.data.message;
-                isSpinner.value = false
-            });
+              snackbar.value = updateSnackbar("User is Updated successfully!","green")
+              isSpinner.value = false
+          })
+          .catch((error) => {
+              console.log(error);
+              snackbar.value = updateSnackbar(error.response.data.message)
+              isSpinner.value = false
+          });
     }
 }
 </script>
@@ -113,22 +104,19 @@ async function updateUser() {
         </div>
         <Spinner v-if="isSpinner" />
         <v-card-text v-else>
-          <div class="mb-3">
-          <label for="firstName" class="form-label">First Name</label>
-          <input type="text" class="form-control " id="firstName" v-model="user.firstName"/>
-        </div>
+        <InputField class="md-3" id="firstName" title="First Name" :value="user.firstName" @update:value="user.firstName = $event"/>
+        <InputField class="md-3" id="lastName" title="Last Name" :value="user.lastName" @update:value="user.lastName = $event"/>
+        <InputField class="md-3" id="email" title="Email" :value="user.email" @update:value="user.email = $event"/>
+        <InputField class="md-3" id="mobile" title="Mobile" :value="user.mobile" @update:value="user.mobile = $event"/>
+        <!-- <InputField class="md-3" id="password" title="Password" :value="user.password" @update:value="user.password = $event"/> -->
         <div class="mb-3">
-          <label for="lastName" class="form-label">Last Name</label>
-          <input type="text" class="form-control " id="lastName" v-model="user.lastName"/>
+        <label for="role" class="form-label">Availability</label>
+        <select class="form-control " id="role" v-model="user.availabilty">
+            <option value="">Select Availability</option>
+            <option value="0" key="0">No</option>
+            <option value="1" key="1">Yes</option>
+        </select>
         </div>
-          <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="text" class="form-control " id="email" v-model="user.email"/>
-        </div>
-        <div class="mb-3">
-          <label for="mobile" class="form-label">Mobile</label>
-          <input type="text" class="form-control " id="mobile" v-model="user.mobile"/>
-        </div>  
         <div class="mb-3">
         <label for="role" class="form-label">Role</label>
         <select class="form-control " id="role" v-model="user.roleId">
@@ -142,19 +130,7 @@ async function updateUser() {
           <v-btn variant="flat" color="primary" @click="updateUser()">Update</v-btn>
         </v-card-actions>
       </v-card>
-      <v-snackbar v-model="snackbar.value" rounded="pill">
-        {{ snackbar.text }}
-
-        <template v-slot:actions>
-          <v-btn
-            :color="snackbar.color"
-            variant="text"
-            @click="closeSnackBar()"
-          >
-            Close
-          </v-btn>
-        </template>
-      </v-snackbar>
+      <Snackbar :snackbar="snackbar"/>
     </div>
   </v-container>
 </template>
