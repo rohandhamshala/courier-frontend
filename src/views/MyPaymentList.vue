@@ -4,7 +4,7 @@
 <v-container>
   <div>
   <h5>My Payment page</h5>
-   <div
+   </div>
 </v-container>
 
 </template>
