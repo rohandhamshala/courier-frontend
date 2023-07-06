@@ -41,7 +41,10 @@ async function createAccount() {
     .then((res) => {
       snackbar.value.value = true;
       snackbar.value.color = "green";
-      snackbar.value.text = "Account created successfully!";
+      if(res.data.is_verified == 0)
+        snackbar.value.text = "Account created successfully, Please contact Admin to verify your Account!";
+      else
+        snackbar.value.text = "Account created successfully!";
       router.push({ name: "login" });
     })
     .catch((error) => {

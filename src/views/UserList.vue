@@ -5,7 +5,8 @@ import UserServices from "../services/UserServices.js";
 import { ref } from "vue";
 import Spinner from "../components/Spinner.vue";
 import { getDomainUrl } from "../utils"
-
+import Snackbar from "../components/Snackbar.vue";
+import { updateSnackbar } from "../utils"
 
 const users = ref([]);
 const spinner = ref(true);
@@ -20,7 +21,16 @@ const snackbar = ref({
 });
 const filter = ref(2)
 const search = ref("")
+const availableOptions = [
+  { value: 2, label: 'All' },
+  { value: 1, label: 'Available' },
+  { value: 0, label: 'Not Available' },
+];
 onMounted(async () => {
+  user.value = JSON.parse(localStorage.getItem("user"));
+  if(!user.value) {
+    router.push({ name: "login" });
+  }
   await getUsers();
   spinner.value = false;
 });
@@ -35,9 +45,6 @@ async function getUsers() {
       console.log(error);
     });
 }
-function closeSnackBar() {
-  snackbar.value.value = false;
-}
 watch(
       () => router.currentRoute.value.params.type,
       (newType, oldType) => {
@@ -46,10 +53,9 @@ watch(
         }
       }
     );
-
  watch(
       filter,
-      (newValue, oldValue) => {
+      (newValue, _) => {
         if (newValue === 2) {
           users.value = backup.value;
         } else {
@@ -60,7 +66,7 @@ watch(
     );
  watch(
       search,
-      (newValue, oldValue) => {
+      (newValue, _) => {
           const filteredUsers = backup.value.filter(user => 
           user.firstName.toLowerCase().includes(newValue.toLowerCase()) ||
           user.lastName.toLowerCase().includes(newValue.toLowerCase()) ||
@@ -68,22 +74,17 @@ watch(
           user.mobile.toLowerCase().includes(newValue.toLowerCase())
           );
           users.value = filteredUsers;
-          console.log("user",users.value)
       }
     );
 const deleteUser = async(id,index) => {
     await UserServices.deleteUser(id)
     .then((res) => {
       users.value.splice(index, 1);
-      snackbar.value.value = true;
-      snackbar.value.color = "green";
-      snackbar.value.text = "User is deleted successfully!";
+      snackbar.value = updateSnackbar("User is deleted successfully!","green")
     })
     .catch((error) => {
       console.log(error);
-      snackbar.value.value = true;
-      snackbar.value.color = "error";
-      snackbar.value.text = error.response.data.message;
+      snackbar.value = updateSnackbar(error.response.data.message)
     });
 }
 
@@ -104,16 +105,16 @@ const deleteUser = async(id,index) => {
     <div style="display:flex;">
       <h5 style="margin-top:5px"> Filters </h5>
       <div class="mb-3">
-        <select class="form-control" id="dropdown" style="margin-left:20px;" v-model="filter" >
-            <option  :key="2" :value="2">All</option>
-            <option  :key="1" :value="1">Available</option>
-            <option :key="0" :value="0">Not Available</option>
+        <select class="form-control" id="dropdown" style="margin-left:20px;" v-model="filter">
+          <option v-for="(option, index) in availableOptions" :key="index" :value="option.value">
+            {{ option.label }}
+          </option>
         </select>
-        </div>
+      </div>
       <input class="form-control search" type="search" placeholder="Search" aria-label="Search" v-model="search"/><br/>
     </div>
     <Spinner v-if="spinner" />
-    <div class="col-md-12 container elevation-4 users" v-else>
+    <div class="col-md-12 container elevation-4 users" v-else-if="users.length != 0">
                 <table class="table" style="background-color: white;">
                 <thead class="thead-dark">
                     <tr>
@@ -137,7 +138,7 @@ const deleteUser = async(id,index) => {
                     <td v-else>No</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
-                        <a type="button" class="btn btn-secondary edit" :href="[ getDomainUrl()+'edit-user/'+user.id]">Edit</a>
+                        <a type="button" class="btn btn-secondary edit" :href="[ getDomainUrl()+'/edit-user/'+user.id]">Edit</a>
                         <button type="button" class="btn btn-secondary delete" @click="deleteUser(user.id,index)">Delete</button>
                         </div>         
                     </td>
@@ -145,19 +146,12 @@ const deleteUser = async(id,index) => {
                 </tbody>
                 </table>
           </div>
+    <div class="text-center" v-else>
+      <h4 class="text-muted">No Users available</h4>
+      <hr/>
     </div>
-   <v-snackbar v-model="snackbar.value" rounded="pill">
-        {{ snackbar.text }}
-        <template v-slot:actions>
-          <v-btn
-            :color="snackbar.color"
-            variant="text"
-            @click="closeSnackBar()"
-          >
-            Close
-          </v-btn>
-        </template>
-      </v-snackbar>
+    </div>
+    <Snackbar :snackbar="snackbar"/>
   <br/>
 </v-container>
 
