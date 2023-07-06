@@ -185,7 +185,7 @@ function logout() {
         ></v-img> 
       </v-app-bar-nav-icon>
       <v-toolbar-title class="title" :style="{color:'white',cursor:'pointer'}" >
-        <a href="/">{{ title }}</a>
+        <a href="/okc-couriers">{{ title }}</a>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-if="user === null" class="mx-2" :to="{ name: 'login' }">

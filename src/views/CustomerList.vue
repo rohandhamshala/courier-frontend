@@ -70,7 +70,7 @@ const deleteCustomer = async(id,index) => {
   <div class="container" style="margin-top: 20px">
     <div style="display: flex; justify-content: center;">
       <h3>Customer list</h3>
-    <a class="btn btn-warning create" href="/create-customer" style="margin-left:auto;" >Create Customer</a>
+    <a class="btn btn-warning create" href="/okc-couriers/create-customer" style="margin-left:auto;" >Create Customer</a>
     </div>
     <br/>
     <input class="form-control search" type="search" placeholder="Search" aria-label="Search" v-model="search"/><br/>
