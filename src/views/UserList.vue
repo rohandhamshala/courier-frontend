@@ -138,7 +138,7 @@ const deleteUser = async(id,index) => {
                     <td v-else>No</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
-                        <a type="button" class="btn btn-secondary edit" :href="[ getDomainUrl()+'/edit-user/'+user.id]">Edit</a>
+                        <a type="button" class="btn btn-secondary edit" href="/okc-couriers/edit-user/'+user.id">Edit</a>
                         <button type="button" class="btn btn-secondary delete" @click="deleteUser(user.id,index)">Delete</button>
                         </div>         
                     </td>

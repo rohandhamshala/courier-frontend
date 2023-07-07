@@ -100,7 +100,7 @@ const deleteCustomer = async(id,index) => {
                     <td>{{ customer.address }}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
-                        <a type="button" class="btn btn-secondary edit" :href="['/edit-customer/'+customer.id]">Edit</a>
+                        <a type="button" class="btn btn-secondary edit" :href="['/okc-couriers/edit-customer/'+customer.id]">Edit</a>
                         <button type="button" class="btn btn-secondary delete" @click="deleteCustomer(customer.id,index)">Delete</button>
                         </div>         
                     </td>
