@@ -93,7 +93,6 @@ async function updateCustomer() {
       <v-card class="rounded-lg elevation-5">
         <div style="display:flex;" class="heading">
           <v-card-title class="headline mb-2">Update Customer </v-card-title>
-          <v-btn variant="flat" color="primary" class="add" href="/travel-frontend/addcustomerday">Add Day</v-btn>
         </div>
         <Spinner v-if="isSpinner" />
         <v-card-text v-else>
