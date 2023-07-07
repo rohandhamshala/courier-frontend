@@ -110,7 +110,7 @@ const deleteOrder = async(id,index) => {
   <div style="margin-top: 20px">
     <div style="display: flex; justify-content: center;">
       <h3>Orders</h3>
-      <a class="btn btn-warning create" :href="[ getDomainUrl() + '/okc-couriers/create-order']" style="margin-left:auto;" v-if="user && user.role_id != 3" >Create Order</a>
+      <a class="btn btn-warning create" :href="[ getDomainUrl() + '/create-order']" style="margin-left:auto;" v-if="user && user.role_id != 3" >Create Order</a>
     </div>
     <br/>
     <div style="display:flex;margin-bottom:10px;">
