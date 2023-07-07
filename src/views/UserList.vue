@@ -99,7 +99,7 @@ const deleteUser = async(id,index) => {
       <h3 v-else-if="type == 3">Delivery Boy list</h3>
       <h3 v-else-if="type=='unverified'">Unverified Users</h3>
       <h3 v-else>User list</h3>
-        <a class="btn btn-warning create" href="/okc-couriers/create-user" style="margin-left:auto;" >Create User</a>
+        <a class="btn btn-warning create" :href="[getDomainUrl()+'/create-user']" style="margin-left:auto;" >Create User</a>
     </div>
     <br/>
     <div style="display:flex;">
@@ -138,7 +138,7 @@ const deleteUser = async(id,index) => {
                     <td v-else>No</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
-                        <a type="button" class="btn btn-secondary edit" href="/okc-couriers/edit-user/'+user.id">Edit</a>
+                        <a type="button" class="btn btn-secondary edit" :href="[ getDomainUrl()+'/edit-user/'+user.id]">Edit</a>
                         <button type="button" class="btn btn-secondary delete" @click="deleteUser(user.id,index)">Delete</button>
                         </div>         
                     </td>

@@ -6,7 +6,7 @@ import { ref } from "vue";
 import Spinner from "../components/Spinner.vue";
 import Snackbar from "../components/Snackbar.vue";
 import { updateSnackbar } from "../utils"
-
+import { getDomainUrl } from "../utils"
 
 const customers = ref([]);
 const spinner = ref(true);
@@ -70,7 +70,7 @@ const deleteCustomer = async(id,index) => {
   <div class="container" style="margin-top: 20px">
     <div style="display: flex; justify-content: center;">
       <h3>Customer list</h3>
-    <a class="btn btn-warning create" href="/okc-couriers/create-customer" style="margin-left:auto;" >Create Customer</a>
+    <a class="btn btn-warning create" :href="[ getDomainUrl() +'/create-customer']" style="margin-left:auto;" >Create Customer</a>
     </div>
     <br/>
     <input class="form-control search" type="search" placeholder="Search" aria-label="Search" v-model="search"/><br/>
@@ -100,7 +100,7 @@ const deleteCustomer = async(id,index) => {
                     <td>{{ customer.address }}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
-                        <a type="button" class="btn btn-secondary edit" :href="['/okc-couriers/edit-customer/'+customer.id]">Edit</a>
+                        <a type="button" class="btn btn-secondary edit" :href="[ getDomainUrl() +'/edit-customer/'+customer.id]">Edit</a>
                         <button type="button" class="btn btn-secondary delete" @click="deleteCustomer(customer.id,index)">Delete</button>
                         </div>         
                     </td>

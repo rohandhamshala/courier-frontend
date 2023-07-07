@@ -6,7 +6,7 @@ import { ref } from "vue";
 import Spinner from "../components/Spinner.vue";
 import Snackbar from "../components/Snackbar.vue";
 import { updateSnackbar } from "../utils"
-
+import { getDomainUrl } from "../utils"
 
 const orders = ref([]);
 const backup = ref([]);
@@ -110,7 +110,7 @@ const deleteOrder = async(id,index) => {
   <div style="margin-top: 20px">
     <div style="display: flex; justify-content: center;">
       <h3>Orders</h3>
-      <a class="btn btn-warning create" href="/okc-couriers/create-order" style="margin-left:auto;" v-if="user && user.role_id != 3" >Create Order</a>
+      <a class="btn btn-warning create" :href="[ getDomainUrl() + '/okc-couriers/create-order']" style="margin-left:auto;" v-if="user && user.role_id != 3" >Create Order</a>
     </div>
     <br/>
     <div style="display:flex;margin-bottom:10px;">
@@ -155,7 +155,7 @@ const deleteOrder = async(id,index) => {
                         <div class="btn-group" role="group" aria-label="Basic example">
                         <a type="button" class="btn btn-secondary edit" :href="['/edit-order/'+order.id]">Edit</a>
                         <button type="button" class="btn btn-secondary delete" @click="deleteOrder(order.id,index)">Delete</button>
-                        <a type="button" class="btn btn-secondary edit" :href="['/edit-order/'+order.id]" v-if="!order.delivery_boy_id">Assign</a>
+                        <a type="button" class="btn btn-secondary edit" :href="[ getDomainUrl() +'/edit-order/'+order.id]" v-if="!order.delivery_boy_id">Assign</a>
                         </div>         
                     </td>
                     </tr>
