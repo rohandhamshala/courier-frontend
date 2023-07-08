@@ -155,7 +155,7 @@ const deleteOrder = async(id,index) => {
                         <div class="btn-group" role="group" aria-label="Basic example">
                         <a type="button" class="btn btn-secondary edit" :href="['/edit-order/'+order.id]">Edit</a>
                         <button type="button" class="btn btn-secondary delete" @click="deleteOrder(order.id,index)">Delete</button>
-                        <a type="button" class="btn btn-secondary edit" :href="[ getDomainUrl() +'/edit-order/'+order.id]" v-if="!order.delivery_boy_id">Assign</a>
+                        <a type="button" class="btn btn-secondary edit" :href="[ '/okc-couriers/edit-order/'+order.id]" v-if="!order.delivery_boy_id">Assign</a>
                         </div>         
                     </td>
                     </tr>
