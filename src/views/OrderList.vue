@@ -192,7 +192,7 @@ const delivered = async(id,index) => {
                         </div>         
                     </td>
                     <td>
-                        <a type="button" class="btn btn-secondary edit" :href="['/orderDetails/'+order.id]">View Order</a>
+                        <a type="button" class="btn btn-secondary edit" :href="['/okc-couriers/orderDetails/'+order.id]">View Order</a>
                     </td>
                     </tr>
                 </tbody>
