@@ -181,7 +181,7 @@ const delivered = async(id,index) => {
                     <td scope="col" v-if="type =='deliveredByMe'">{{ order.delivery_boy_bonus }}</td>
                     <td v-if="user.role_id != 3">
                         <div class="btn-group" role="group" aria-label="Basic example" v-if="!order.delivered_at">
-                        <a type="button" class="btn btn-secondary edit" :href="['/edit-order/'+order.id]">Edit</a>
+                        <a type="button" class="btn btn-secondary edit" :href="['/okc-couriers/edit-order/'+order.id]">Edit</a>
                         <button type="button" class="btn btn-secondary delete" @click="deleteOrder(order.id,index)">Delete</button>
                         </div>         
                     </td>
