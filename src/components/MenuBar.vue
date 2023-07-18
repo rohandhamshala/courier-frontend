@@ -91,7 +91,7 @@ const routes = {
       name: "My Payments"
     },
     {
-      path: "/orders/placedByMe",
+      path: "/orders/placedByMe/",
       icon: getDomainUrl()+"/order.png",
       name: "Orders placed by me"
     }
@@ -103,7 +103,7 @@ const routes = {
     name: "Dashboard"
     },
     {
-    path: "/my-current-order",
+    path: "/orders/my-current-order",
     icon: getDomainUrl()+"/order.png",
     name: "Current Order"
     },
@@ -113,7 +113,7 @@ const routes = {
       name: "My Payments"
     },
     {
-      path: "/orders/deliveredByMe",
+      path: "/orders/deliveredByMe/",
       icon: getDomainUrl()+"/order.png",
       name: "Orders delivered by me"
     }
@@ -185,7 +185,7 @@ function logout() {
         ></v-img> 
       </v-app-bar-nav-icon>
       <v-toolbar-title class="title" :style="{color:'white',cursor:'pointer'}" >
-        <a href="/okc-couriers">{{ title }}</a>
+        <a href="/">{{ title }}</a>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-if="user === null" class="mx-2" :to="{ name: 'login' }">
