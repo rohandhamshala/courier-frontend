@@ -1,6 +1,6 @@
 import axios from "axios";
 
-var baseurl = "http://ec2-54-82-47-157.compute-1.amazonaws.com:3200/";
+var baseurl = "http://ec2-18-232-182-164.compute-1.amazonaws.com:3200/";
 // var baseurl = "http://localhost:3200/"
 
 const apiClient = axios.create({
