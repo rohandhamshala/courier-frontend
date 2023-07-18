@@ -64,7 +64,7 @@ const deletePayment = async(id,index) => {
   <div class="container" style="margin-top: 20px">
     <div style="display: flex; justify-content: center;">
       <h3>Payments</h3>
-     <a class="btn btn-warning create" href="/create-payment" style="margin-left:auto;" >Create Payment</a>
+     <a class="btn btn-warning create" href="/okc-couriers/create-payment" style="margin-left:auto;" >Create Payment</a>
     </div>
     <br/>
     <Spinner v-if="spinner" />
@@ -91,7 +91,7 @@ const deletePayment = async(id,index) => {
                     <td>{{ payment.description }}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
-                        <a type="button" class="btn btn-secondary edit" :href="['/edit-payment/'+payment.id]">Edit</a>
+                        <a type="button" class="btn btn-secondary edit" :href="['/okc-couriers/edit-payment/'+payment.id]">Edit</a>
                         <button type="button" class="btn btn-secondary delete" @click="deletePayment(payment.id,index)">Delete</button>
                         </div>         
                     </td>
