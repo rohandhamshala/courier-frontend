@@ -2,11 +2,21 @@ import apiClient from "./services";
 
 export default {
   getOrders(type,userId) {
-    if(!type)
+    if(!userId || !type)
       return apiClient.get("orders");
-    if(type == "placedBy")
-      return apiClient.get("orders/placedBy/"+userId)
-    return apiClient.get("orders/deliveryBoy/"+userId) 
+    else {
+      if(type == "placedByMe"){
+        return apiClient.get("orders/placedBy/"+userId)
+      } else if(type == "deliveredByMe") {
+        return apiClient.get("orders/deliveryBoy/"+userId+"?status=DELIVERED")
+      } else if(type == "my-current-order") {
+        return apiClient.get("orders/deliveryBoy/"+userId+"?status=NOT_DELIVERED")
+      } 
+      else {
+        return apiClient.get("orders")
+      }
+    }
+      
   },
   getOrder(id) {
     return apiClient.get("orders/" + id);
@@ -22,5 +32,11 @@ export default {
   },
   deleteOrder(orderId) {
     return apiClient.delete("orders/" + orderId);
+  },
+  pickedup(orderId) {
+    return apiClient.post("/orders/pickedup/" + orderId);
+  },
+  delivered(orderId) {
+    return apiClient.post("orders/delivered/" + orderId);
   }
 };
