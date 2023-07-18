@@ -6,7 +6,7 @@ import { ref } from "vue";
 import Spinner from "../components/Spinner.vue";
 import Snackbar from "../components/Snackbar.vue";
 import { updateSnackbar } from "../utils"
-import { getDomainUrl } from "../utils"
+
 
 const orders = ref([]);
 const backup = ref([]);
@@ -31,6 +31,7 @@ const availableOptions = [
 const pickup_customer_details = ref({})
 const drop_customer_details = ref({})
 onMounted(async () => {
+  console.log("type",type)
   user.value = JSON.parse(localStorage.getItem("user"));
   if(!user.value) {
     router.push({ name: "login" });
@@ -82,7 +83,7 @@ watch(
     );
 
 async function getOrders() {
-  await OrderServices.getOrders(type,user.value.id)
+  await OrderServices.getOrders(router.currentRoute.value.params.type,router.currentRoute.value.params.id || user.value.id)
     .then((res) => {
       orders.value = res.data;
       backup.value = res.data;
@@ -103,17 +104,40 @@ const deleteOrder = async(id,index) => {
       snackbar.value = updateSnackbar(error.response.data.message)
     });
 }
+const pickedup = async(id,index) => {
+    await OrderServices.pickedup(id)
+    .then((res) => {
+      orders.value[index].pickedup_at = "not null"
+      orders.value[index].status = "PROGRESS"
+      snackbar.value = updateSnackbar("Order is pickeup successfully!","green")
+    })
+    .catch((error) => {
+      console.log(error);
+      snackbar.value = updateSnackbar(error.response.data.message)
+    });
+}
+const delivered = async(id,index) => {
+    await OrderServices.delivered(id)
+    .then((res) => {
+      orders.value.splice(index, 1);
+      snackbar.value = updateSnackbar("Order is delivered successfully!","green")
+    })
+    .catch((error) => {
+      console.log(error);
+      snackbar.value = updateSnackbar(error.response.data.message)
+    });
+}
 </script>
 
 <template>
-<v-container>
-  <div style="margin-top: 20px">
+<!-- <v-container> -->
+  <div style="margin-top: 20px;margin-left:30px;margin-right:30px;">
     <div style="display: flex; justify-content: center;">
       <h3>Orders</h3>
-      <a class="btn btn-warning create" :href="[ getDomainUrl() + '/create-order']" style="margin-left:auto;" v-if="user && user.role_id != 3" >Create Order</a>
+      <a class="btn btn-warning create" href="/create-order" style="margin-left:auto;" v-if="user && user.role_id != 3" >Create Order</a>
     </div>
     <br/>
-    <div style="display:flex;margin-bottom:10px;">
+    <div style="display:flex;margin-bottom:10px;" v-if="type != 'my-current-order' && type != 'deliveredByMe'">
       <h5 style="margin-top:5px"> Filters </h5>
       <div class="mb-3">
         <select class="form-control" id="dropdown" style="margin-left:20px;" v-model="filter">
@@ -137,7 +161,9 @@ const deleteOrder = async(id,index) => {
                     <th scope="col">Price of Order</th>
                     <th scope="col">Distance</th>
                     <th scope="col">Status</th>
-                    <th scope="col" v-if="user.role_id != 3">Actions</th>
+                    <th scope="col" v-if="type =='deliveredByMe'">Delivered In time</th>
+                    <th scope="col" v-if="type =='deliveredByMe'">Bonus</th>
+                    <th scope="col" v-if="type !='deliveredByMe'">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -151,12 +177,22 @@ const deleteOrder = async(id,index) => {
                     <td>${{ order.price_for_order }}</td>
                     <td >{{ order.distance }} Miles</td>
                     <td> {{ order.status }} </td>
+                    <td v-if="type =='deliveredByMe'"> {{ order.delivered_in_time }} </td>
+                    <td scope="col" v-if="type =='deliveredByMe'">{{ order.delivery_boy_bonus }}</td>
                     <td v-if="user.role_id != 3">
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                        <a type="button" class="btn btn-secondary edit" :href="[ getDomainUrl() +'/edit-order/'+order.id]" >Edit</a>
+                        <div class="btn-group" role="group" aria-label="Basic example" v-if="!order.delivered_at">
+                        <a type="button" class="btn btn-secondary edit" :href="['/edit-order/'+order.id]">Edit</a>
                         <button type="button" class="btn btn-secondary delete" @click="deleteOrder(order.id,index)">Delete</button>
-                        <a type="button" class="btn btn-secondary edit" :href="[ getDomainUrl() +'/edit-order/'+order.id]" v-if="!order.delivery_boy_id">Assign</a>
                         </div>         
+                    </td>
+                      <td v-if="user.role_id == 3 && !order.delivered_at">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-secondary edit" v-if="!order.pickedup_at" @click="pickedup(order.id,index)">Picked Up</button>
+                        <button type="button" class="btn btn-secondary edit" v-if="!order.delivered_at && order.pickedup_at" @click="delivered(order.id,index)">Delivered</button>
+                        </div>         
+                    </td>
+                    <td>
+                        <a type="button" class="btn btn-secondary edit" :href="['/orderDetails/'+order.id]">View Order</a>
                     </td>
                     </tr>
                 </tbody>
@@ -169,7 +205,7 @@ const deleteOrder = async(id,index) => {
   </div>
   <Snackbar :snackbar="snackbar"/>
   <br/>
-</v-container>
+<!-- </v-container> -->
 
 </template>
 

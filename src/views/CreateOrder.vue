@@ -114,7 +114,15 @@ async function addOrder() {
         </div>
         <Spinner v-if="isSpinner" />
         <v-card-text v-else>
-        <InputField class="md-3" id="first_name" title="Pickup Time" :value="order.pickup_time" @update:value="order.pickup_time = $event"/>
+          <div class="md-3" style="margin-bottom:10px">
+            <label for="pickuptime" class="form-label">Pickup Date and Time</label>
+            <input
+              type="datetime-local"
+              class="form-control"
+              id="pickuptime"
+              v-model="order.pickup_time"
+            />
+          </div>
         <div class="mb-3">
             <label for="user" class="form-label">Pickup Customer </label>
             <select class="form-control" id="dropdown" v-model="pickup_customer_details">

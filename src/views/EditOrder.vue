@@ -99,6 +99,13 @@ async function getAvailableDeliveryBoys() {
         <Spinner v-if="isSpinner" />
         <v-card-text v-else>
           <div class="mb-3">
+            <label for="user" class="form-label">Assign Delivery Boy</label>
+            <select class="form-control" id="dropdown" v-model="order.delivery_boy_id">
+              <option value="">Select Delivery Boy</option>
+              <option v-for="deliveryBoy in deliveryBoys" :key="deliveryBoy.id" :value="deliveryBoy.id"> {{deliveryBoy.lastName}} {{deliveryBoy.firstName}}</option>
+            </select>
+          </div>
+          <div class="mb-3">
           <label for="first_name" class="form-label">Pickup Time</label>
           <input type="text" class="form-control" id="first_name" v-model="order.pickup_time"/>
         </div>
@@ -120,19 +127,12 @@ async function getAvailableDeliveryBoys() {
         <InputField class="md-3" id="price" title="Price for Delivery Boy" :value="order.price_for_delivery_boy" @update:value="order.price_for_delivery_boy = $event"/>
           <div class="mb-3">
               <label for="price" class="form-label">Status </label>
-              <select class="form-control" id="dropdown" v-model="order.status">
+              <select class="form-control" id="dropdown" v-model="order.status" disabled>
               <option v-for="status in statusOptions" :key="status" :value="status"> {{status}}</option>
             </select>
           </div>
         <InputField class="md-3" id="time" title="Time takes to deliver order" :value="order.minimum_time" @update:value="order.minimum_time = $event"/>
         <InputField class="md-3" id="price" title="Distance" :value="order.distance" @update:value="order.distance = $event"/>
-          <div class="mb-3">
-            <label for="user" class="form-label">Assign Delivery Boy</label>
-            <select class="form-control" id="dropdown" v-model="order.delivery_boy_id">
-              <option value="">Select Delivery Boy</option>
-              <option v-for="deliveryBoy in deliveryBoys" :key="deliveryBoy.id" :value="deliveryBoy.id"> {{deliveryBoy.lastName}} {{deliveryBoy.firstName}}</option>
-            </select>
-        </div>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
