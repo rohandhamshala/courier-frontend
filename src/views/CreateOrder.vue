@@ -62,9 +62,14 @@ async function getOrderDetails() {
     isSpinner.value = true
     await OrderServices.calculateOrderDetails({pickup_address: pickup_customer_details.value.address, delivery_address: drop_customer_details.value.address})
         .then((response) => {
+            if(response.data.distance != null){
             snackbar.value = updateSnackbar("order details retrieved successfully!","green")
             isSpinner.value = false
             orderDetailsRetrieved.value = response.data
+            } else {
+            snackbar.value = updateSnackbar("Cannot find a path! please contact Admin")
+            isSpinner.value = false
+            }
         })
         .catch((error) => {
             console.log(error);
@@ -146,9 +151,9 @@ async function addOrder() {
         </v-card-actions><br/>
         <div v-if="orderDetailsRetrieved != null" class="order_details">
           <h3 style="text-decoration:underline;">Order Details</h3>
-          <InputField class="md-3 details" id="price" title="Price for Order" :value="orderDetailsRetrieved.price_for_order" disabled="true" />
-          <InputField class="md-3 details" id="time" title="Time takes to deliver order" :value="orderDetailsRetrieved.minimum_time" disabled="true"/>
-          <InputField class="md-3 details" id="distance" title="Distance" :value="orderDetailsRetrieved.distance" disabled="true"/>
+           <InputField class="md-3 details" id="price" title="Price for Order" :value="['$ '+orderDetailsRetrieved.price_for_order]" disabled="true" />
+          <InputField class="md-3 details" id="time" title="Time takes to deliver order" :value="[orderDetailsRetrieved.minimum_time+' Minutes']" disabled="true"/>
+          <InputField class="md-3 details" id="distance" title="Distance" :value="[orderDetailsRetrieved.distance+ ' Miles']" disabled="true"/>
           <v-card-actions>
             <v-btn variant="flat" class="create" color="primary" @click="addOrder()">Place Order</v-btn>
           </v-card-actions><br/>
