@@ -38,5 +38,8 @@ export default {
   },
   delivered(orderId) {
     return apiClient.post("orders/delivered/" + orderId);
+  },
+  findPath(order) {
+    return apiClient.post("orders/route/", order);
   }
 };
