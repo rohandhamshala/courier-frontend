@@ -6,6 +6,7 @@ import { ref } from "vue";
 import Spinner from "../components/Spinner.vue";
 import Snackbar from "../components/Snackbar.vue";
 import { updateSnackbar } from "../utils"
+import html2pdf from 'html2pdf.js';
 
 
 const order = ref([]);
@@ -16,6 +17,7 @@ const snackbar = ref({
   color: "",
   text: "",
 });
+const path = ref(null)
 const router = useRouter()
 
 onMounted(async () => {
@@ -31,11 +33,23 @@ async function getOrder() {
   await OrderServices.getOrder(router.currentRoute.value.params.id)
     .then((res) => {
       order.value = res.data;
+      findPath(res.data.pickup_customer.address,res.data.delivery_customer.address)
       console.log("order",res.data)
     })
     .catch((error) => {
       console.log(error);
     });
+}
+
+const findPath = async(pickup_address,delivery_address)=>{
+  await OrderServices.findPath({ pickup_address, delivery_address})
+      .then((res) => {
+        path.value = res.data
+      })
+      .catch((error) => {
+        console.log(error);
+        snackbar.value = updateSnackbar(error.response.data.message)
+      });
 }
 
 const deleteOrder = async() => {
@@ -67,6 +81,96 @@ const delivered = async() => {
       console.log(error);
       snackbar.value = updateSnackbar(error.response.data.message)
     });
+}
+
+const downloadInvoice = () =>{
+  const invoice = order.value
+   // Generate the HTML content for the invoice
+      const invoiceHTML = `
+         <html>
+        <head>
+          <style>
+          table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+          }
+          table {
+              width: 80%;
+          }
+          td {
+              width: 80%;
+              padding: 10px;
+          }
+          th {
+              padding-left: 10px;
+          }
+          .flex {
+              display: flex;
+              justify-content: space-around;
+          }
+          </style>
+        </head>
+        <body>
+          <h3>Invoice for Order ID: ${invoice.id}</h3>
+          <div class="flex">
+          <table>
+                <tr>
+                <th>Price to Deliver</th>
+                <td>$ ${ invoice.price_for_order}</td>
+                </tr>
+                <tr>
+                <th>Distance</th>
+                <td> ${ invoice.distance } Miles</td>
+                </tr>
+                <tr>
+                <th>Order Created At</th>
+                <td> ${ invoice.createdAt } </td>
+                </tr>
+                <tr>
+                <th>Picked up At</th>
+                <td> ${ invoice.pickedup_at } </td>
+                </tr>
+                <tr>
+                 <th>Delivered in time</th>
+                <td> ${ invoice.delivered_in_time } </td>
+                </tr>
+                 <tr>
+                 <th>Pickup Details</th>
+                <td> 
+                    <p> Name - ${ invoice.pickup_customer.first_name} ${ invoice.pickup_customer.last_name} <br/>
+                     Email - ${ invoice.pickup_customer.email} <br/>
+                     Mobile - ${ invoice.pickup_customer.mobile} <br/>
+                     Address - ${ invoice.pickup_customer.address} <br/>
+                     Apt Number - ${ invoice.pickup_customer.apartment_number} </p>
+                </td>
+                </tr>
+                <tr>
+                <th>Delivery Details</th>
+                <td> 
+                    <p> Name - ${ invoice.delivery_customer.first_name} ${ invoice.delivery_customer.last_name} <br/>
+                     Email - ${ invoice.delivery_customer.email} <br/>
+                     Mobile - ${ invoice.delivery_customer.mobile} <br/>
+                     Address - ${ invoice.delivery_customer.address} <br/>
+                     Apt Number - ${ invoice.delivery_customer.apartment_number} </p>
+                </td>
+                </tr>
+            </table>
+            </div>
+        </body>
+      </html>
+      `;
+
+      // Options for the PDF generation (optional)
+      const options = {
+        margin: [10, 10], // Page margins (top, right, bottom, left)
+        filename: 'invoice.pdf',
+        image: { type: 'jpeg', quality: 0.98 }, // Optional image settings
+        html2canvas: { scale: 2 }, // Optional html2canvas settings
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }, // Optional jsPDF settings
+      };
+
+      // Generate the PDF from the HTML content
+      html2pdf().from(invoiceHTML).set(options).save();
 }
 </script>
 
@@ -161,6 +265,20 @@ const delivered = async() => {
                      Email - {{ order.delivery_boy_details.email}} <br/>
                      Mobile - {{ order.delivery_boy_details.mobile}} <br/>
                     </p>
+                </td>
+                </tr>
+                <tr v-if="path ">
+                <th>Path</th>
+                <td>
+                  Office to Pickup - {{ path.officeToSource.join(" -> ")}} <br/>
+                  Pickup to Delivery - {{ path.sourceToDestination.join(" -> ") }} <br/>
+                  Return back to Office - {{ path.destinationToOffice.join(" -> ") }}
+                </td>
+                </tr>
+                <tr v-if="order.delivered_at ">
+                <th>Invoice</th>
+                <td> 
+                  <button type="button" class="btn btn-secondary edit" @click="downloadInvoice()">Download</button>
                 </td>
                 </tr>
                 <tr v-if="user.role_id =='3' && !order.delivered_at ">
