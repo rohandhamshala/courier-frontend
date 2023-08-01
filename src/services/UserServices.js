@@ -41,7 +41,7 @@ export default {
     return apiClient.get("users/unverified");
   },
   getAvailableDeliveryBoys(){
-    return apiClient.get("users/availableDeliveryBoys");
+    return apiClient.get("users/deliveryBoys");
   },
   getUsers(id) {
     if(!id)
