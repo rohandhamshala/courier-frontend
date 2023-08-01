@@ -9,6 +9,7 @@ import Barchart from "../components/Barchart.vue";
 import Piechart from "../components/Piechart.vue";
 import Linechart from "../components/Linechart.vue";
 import { updateSnackbar } from "../utils"
+import OrderServices from "../services/OrderServices.js";
 
 const report = ref(null)
 const spinner = ref(true);
@@ -23,12 +24,21 @@ const snackbar = ref({
 const lastWeekChartData = ref([])
 const userChartData = ref([])
 const orderChartData = ref([])
+const orders = ref([])
+const counts = ref({
+        PENDING: 0,
+        PROGRESS: 0,
+        DELIVERED: 0,
+        deliveredInTime: 0
+      });
+
 onMounted(async () => {
   user.value = JSON.parse(localStorage.getItem("user"));
     if(!user.value) {
     router.push({ name: "login" });
   }
   await getReport();
+  await getOrders();
   spinner.value = false;
 });
 
@@ -89,6 +99,23 @@ const generateUsersChart = (data) =>{
     ]
     }
 }
+
+async function getOrders() {
+    const type = user.value.role_id  ==3 ? "noStatus" : "placedByMe"
+  await OrderServices.getOrders(type,router.currentRoute.value.params.id || user.value.id)
+    .then((res) => {
+      orders.value = res.data;
+      orders.value.forEach(order => {
+        counts.value[order.status]++;
+        if (order.delivered_in_time === "YES") {
+          counts.value.deliveredInTime++;
+        }
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 </script>
 
 <template>
@@ -101,16 +128,8 @@ const generateUsersChart = (data) =>{
     <Spinner v-if="spinner" />
     <div class="col-md-12 container elevation-4 report" v-else-if="report">
         <div class="row">
-            <div class="col-6">
-                <Linechart :chartData="lastWeekChartData" />
-            </div>
-            <div class="col-6">
-                <Barchart :chartData="orderChartData" />
-            </div>
-             <div class="col-6">
-                <Piechart :chartData="userChartData" />
-            </div>
-             <div class="col-6 static">
+                 <div class="col-6 static">
+                <h4> Total Statistics </h4>
                 <div class="report-static-data">
                      <p> Total Orders </p>
                     <h4> {{ report.orderCount }} </h4> 
@@ -134,8 +153,23 @@ const generateUsersChart = (data) =>{
                 <div class="report-static-data">
                      <p> Remaining Amount </p>
                     <h4> {{ report.totalOrderAmount - report.deliveryBoyAmountForOrders.toFixed(2) }} </h4> 
-                </div>
-                  
+                </div>   
+            </div>
+            <div class="col-6 static" >
+                <h4> My Orders Details </h4>
+                <p> Pending Orders - {{ counts.PENDING }}</p>
+                <p> Progress Orders - {{ counts.PROGRESS }}</p>
+                <p> Delivered Orders - {{ counts.DELIVERED }}</p>
+                <p> Delivered In Time Orders - {{ counts.deliveredInTime }}</p>
+            </div>
+            <div class="col-12">
+                <Linechart :chartData="lastWeekChartData" style="width:80%;height:400px;" />
+            </div>
+            <div class="col-6">
+                <Barchart :chartData="orderChartData" style="width:500px;height:500px;" />
+            </div>
+             <div class="col-6">
+                <Piechart :chartData="userChartData" style="width:300px;height:300px;" />
             </div>
         </div>
     </div>
@@ -159,7 +193,7 @@ const generateUsersChart = (data) =>{
 }
 .report-static-data {
     display: flex;
-    width: 40%;
+    width: 50%;
     justify-content: space-between;
 }
 .static {
